@@ -7,10 +7,15 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@codemirror/lang-javascript": "^6.1.9",
+    "@codemirror/lang-json": "^6.0.1",
+    "@codemirror/theme-one-dark": "^6.1.2",
     "axios": "^1.4.0",
     "element-plus": "^2.3.8",
     "pinia": "^2.1.4",
-    "vue": "^3.2.8"
+    "vue": "^3.2.8",
+    "vue-codemirror": "^6.1.1",
+    "vue-json-editor": "^1.4.3"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.6.0",

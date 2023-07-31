@@ -9,5 +9,18 @@ export const keyStore = defineStore({
 		currentValue: '',
 		keys: []
       }
-    }
+    },
+	getters: {
+		keyTree(state) {
+			const tree = []
+			for(var key of state.keys){
+				tree.push({
+					id: key,
+					label: key,
+				})
+			}
+			console.log(tree)
+			return tree
+		}
+	}
 })

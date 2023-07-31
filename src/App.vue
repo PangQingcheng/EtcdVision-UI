@@ -5,18 +5,18 @@ import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <div class="common-layout">
-    <el-container>
+  <div >
+    <el-container class="">
       <el-header>EtcdVision</el-header>
       <el-container>
-        <el-aside width="200px">
+        <el-aside width="250px">
 			<SourceList></SourceList>
 		</el-aside>
         <el-container>
           <el-main>
 			    <div class="common-layout">
 			      <el-container>
-			        <el-aside width="200px">
+			        <el-aside width="500px">
 						<KeyList></KeyList>
 					</el-aside>
 			        <el-main>
@@ -43,8 +43,8 @@ import HelloWorld from './components/HelloWorld.vue'
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+
 }
 </style>
