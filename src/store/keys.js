@@ -19,7 +19,6 @@ export const keyStore = defineStore({
 					label: key,
 				})
 			}
-			console.log(tree)
 			return tree
 		}
 	}

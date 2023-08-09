@@ -1,24 +1,15 @@
 
 <template>
   <div class="source-list">
-	<el-container>
-	  <el-header>
-		<div class="header-btn">
-			<el-button type="primary"  @click="connect(item.name)">数据源管理</el-button>
+	<div v-for="item in list" :key="item" class="source-list-item" :class="{'active':item.active}">
+		<strong> {{ item.name }} </strong>
+		<div v-for="endpoint in item.endpoints" :key="endpoint" class="source-list-item-body">
+		  {{ endpoint }}
 		</div>
-	  </el-header>
-	  <el-main>
-		<div v-for="item in list" :key="item" class="source-list-item" :class="{'active':item.active}">
-			<strong> {{ item.name }} </strong>
-			<div v-for="endpoint in item.endpoints" :key="endpoint" class="source-list-item-body">
-			  {{ endpoint }}
-			</div>
-			<span>
-				<el-button color="#626aef" round @click="connect(item.name)">连接</el-button>
-			</span>
-		  </div>
-	  </el-main>
-	</el-container>
+		<span>
+			<el-button color="#626aef" round @click="connect(item.name)">连接</el-button>
+		</span>
+	  </div>
   </div>
 </template>
 
@@ -27,16 +18,13 @@
 	import { ref, onMounted } from 'vue'
 	import {Refresh, Plus} from '@element-plus/icons-vue'
 	import axios from 'axios'
-	import { keyStore } from '../store/keys'
+	import { keyStore } from '@/store/keys'
+	
+	import { DATASOURCE_LIST, ETCD_CONNECT, ETCD_KEYS_LIST } from '@/api/etcd-backend.js'
 	
 	const list = ref([]);
-	const fetchData = () => {
-		axios.get('/api/v1/etcds').then(response => {
-			// 将接口返回的数据赋值给列表
-			list.value = response.data.data;
-        }).catch(error => {
-          console.error('接口请求失败', error);
-        });
+	const  fetchData = async () => {
+		list.value = await DATASOURCE_LIST()
 	}
 	// 生命周期钩子
 	onMounted(fetchData)
@@ -45,27 +33,16 @@
 	
 	const connect = (name) => {
 		store.currentSource = name
-		axios.post('/api/v1/etcds/' + name + '/connect').then(response => {
-			// 将接口返回的数据赋值给列表
-			if (response.data.code == 200){
-				//alert(name + "已连接！")
-				for (var i = 0; i < list.value.length; i++) {
-				  if (list.value[i].name == name){
-					  list.value[i].active = true
-				  }
+		ETCD_CONNECT(name).then(async ()=>{
+			store.keys = await ETCD_KEYS_LIST(name)
+			for(var item of list.value){
+				if (item.name == name){
+					item.active = true
+				}else{
+					item.active = false
 				}
-				// list keys
-				axios.get('/api/v1/etcds/' + name + '/keys', {
-					params: {
-					  prefix: ''
-					}
-				}).then(response => {
-					store.keys = response.data.data
-				})
 			}
-		}).catch(error => {
-		  console.error('接口请求失败', error);
-		});
+		})
 	}
 </script>
 
@@ -77,8 +54,9 @@
 	
 	.source-list{
 		border: 1px solid #464853 ;
-		width: 230px;
-		min-height: 500px;
+		width: 210px;
+		min-height: 600px;
+		padding: 10px;
 	}
 	
 	.source-list-item{

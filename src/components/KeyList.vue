@@ -17,9 +17,11 @@
 <script lang="ts" setup>
 	import { ref } from 'vue'
 	import axios from 'axios'
-	import { keyStore } from '../store/keys'
+	import { keyStore } from '@/store/keys'
 	import { ElTreeV2 } from 'element-plus'
 	import type { TreeNode } from 'element-plus/es/components/tree-v2/src/types'
+	
+	import { READ_ETCD_VALUE } from '@/api/etcd-backend.js'
 	
 	const query = ref('')
 	const treeRef = ref<InstanceType<typeof ElTreeV2>>()
@@ -31,16 +33,10 @@
 	}
 	
 	
-	function getValue(data){
+	const getValue = async(data) => {
 		store.currentKey = data.id
 		const name = store.currentSource
-		axios.get('/api/v1/etcds/' + name + '/value', {
-			params: {
-			  key: data.id
-			}
-		}).then(response => {
-			store.currentValue = response.data.data
-		})
+		store.currentValue = await READ_ETCD_VALUE(name, data.id)
 	}
 	
 	const onQueryChanged = (query: string) => {
