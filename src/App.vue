@@ -53,7 +53,7 @@ import HelloWorld from './components/HelloWorld.vue'
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="newSourceDialog = false">取消</el-button>
-          <el-button type="primary" @click="newSourceDialog = false">
+          <el-button type="primary" @click="newSource();newSourceDialog = false;">
             创建
           </el-button>
         </span>
@@ -71,6 +71,11 @@ import HelloWorld from './components/HelloWorld.vue'
 	import { ref } from 'vue'
 	import { reactive } from 'vue'
 	
+	import { CREATE_DATASOURCE } from '@/api/etcd-backend.js'
+	
+	import { keyStore } from '@/store/keys'
+	
+	
 	const newSourceDialog = ref(false)
 	const newSourceForm = reactive({
 		name: '',
@@ -78,6 +83,11 @@ import HelloWorld from './components/HelloWorld.vue'
 	})
 	const newSource = async ()=>{
 		await CREATE_DATASOURCE(newSourceForm.name, newSourceForm.endpoints)
+		const store = keyStore()
+		store.sources.push({
+			name: newSourceForm.name,
+			endpoints: newSourceForm.endpoints
+		})
 	}
 </script>
 

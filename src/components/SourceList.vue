@@ -1,7 +1,7 @@
 
 <template>
   <div class="source-list">
-	<div v-for="item in list" :key="item" class="source-list-item" :class="{'active':item.active}">
+	<div v-for="item in store.sources" :key="item" class="source-list-item" :class="{'active':item.active}">
 		<strong> {{ item.name }} </strong>
 		<div v-for="endpoint in item.endpoints" :key="endpoint" class="source-list-item-body">
 		  {{ endpoint }}
@@ -22,20 +22,22 @@
 	
 	import { DATASOURCE_LIST, ETCD_CONNECT, ETCD_KEYS_LIST } from '@/api/etcd-backend.js'
 	
-	const list = ref([]);
+	const store = keyStore()
+	//const list = ref([]);
 	const  fetchData = async () => {
-		list.value = await DATASOURCE_LIST()
+		store.sources = await DATASOURCE_LIST()
+		//list.value = await DATASOURCE_LIST()
 	}
 	// 生命周期钩子
 	onMounted(fetchData)
 	
-	const store = keyStore()
+	
 	
 	const connect = (name) => {
 		store.currentSource = name
 		ETCD_CONNECT(name).then(async ()=>{
-			store.keys = await ETCD_KEYS_LIST(name)
-			for(var item of list.value){
+			store.currentKeys = await ETCD_KEYS_LIST(name)
+			for(var item of store.sources){
 				if (item.name == name){
 					item.active = true
 				}else{
