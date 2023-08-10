@@ -5,7 +5,7 @@ import nodePolyfills from 'vite-plugin-node-stdlib-browser'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: './', // !!!!!!! 非常重要，否则打包后无法访问 !!!!!!!
+  base: 'console', // !!!!!!! 非常重要，否则打包后无法访问 !!!!!!!
   plugins: [vue(), nodePolyfills()],
   server: {
 	fs: {
