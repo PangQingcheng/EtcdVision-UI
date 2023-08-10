@@ -23,4 +23,20 @@ export const keyStore = defineStore({
 			return tree
 		}
 	},
+	actions:{
+		removeSource(name){
+			for (var index in this.sources){
+				if(this.sources[index].name == name){
+					this.sources.splice(index,1)
+					break
+				}
+			}
+			if (this.currentSource == name) {
+				this.currentSource= ""
+				this.currentKey = ""
+				this.currentValue = ''
+				this.currentKeys = []
+			}
+		}
+	}
 })

@@ -79,15 +79,20 @@ import HelloWorld from './components/HelloWorld.vue'
 	const newSourceDialog = ref(false)
 	const newSourceForm = reactive({
 		name: '',
-		endpoints: ["1","2"],
+		endpoints: [""],
 	})
 	const newSource = async ()=>{
 		await CREATE_DATASOURCE(newSourceForm.name, newSourceForm.endpoints)
 		const store = keyStore()
+		if (store.sources == null){
+			store.sources = []
+		}
 		store.sources.push({
 			name: newSourceForm.name,
 			endpoints: newSourceForm.endpoints
 		})
+		newSourceForm.name = ''
+		newSourceForm.endpoints = ['']
 	}
 </script>
 

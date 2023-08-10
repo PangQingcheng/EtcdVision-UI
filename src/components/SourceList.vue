@@ -8,9 +8,15 @@
 		</div>
 		<span>
 			<el-button color="#626aef" round @click="connect(item.name)">连接</el-button>
+			<el-popconfirm title="确认删除此连接?"  @confirm="remove(item.name)">
+				<template #reference>
+					<el-button color="red" round>刪除</el-button>
+				</template>
+			</el-popconfirm>
 		</span>
 	  </div>
   </div>
+  
 </template>
 
 
@@ -20,7 +26,7 @@
 	import axios from 'axios'
 	import { keyStore } from '@/store/keys'
 	
-	import { DATASOURCE_LIST, ETCD_CONNECT, ETCD_KEYS_LIST } from '@/api/etcd-backend.js'
+	import { DATASOURCE_LIST, ETCD_CONNECT, ETCD_KEYS_LIST, REMOVE_DATASOURCE } from '@/api/etcd-backend.js'
 	
 	const store = keyStore()
 	//const list = ref([]);
@@ -30,8 +36,6 @@
 	}
 	// 生命周期钩子
 	onMounted(fetchData)
-	
-	
 	
 	const connect = (name) => {
 		store.currentSource = name
@@ -45,6 +49,11 @@
 				}
 			}
 		})
+	}
+	
+	const remove = async (name) => {
+		await REMOVE_DATASOURCE(name)
+		store.removeSource(name)
 	}
 </script>
 
